@@ -7,6 +7,7 @@ import java.util.Scanner;
 import sge.domain.Curso;
 import sge.domain.Endereco;
 import sge.domain.Estudante;
+import sge.domain.Item;
 import sge.domain.Nivel;
 import sge.domain.Periodo;
 import sge.domain.Turma;
@@ -45,9 +46,9 @@ public class App {
         case "1" -> cadastrarCurso();
         case "2" -> cadastrarTurma();
         case "3" -> cadastrarEstudante();
-        case "4" -> listarCursos();
-        case "5" -> listarTurmas();
-        case "6" -> listarEstudantes();
+        case "4" -> listarItens(cursos);
+        case "5" -> listarItens(turmas);
+        case "6" -> listarItens(estudantes);
         case "7" -> imprimeMensagemDeSaida("Encerrando cadastro...");
         default -> imprimeMensagemDeSaida("Opção desconhecida. Selecione uma opção válida.");
       }
@@ -176,36 +177,19 @@ public class App {
     }
   }
 
-  public static void listarCursos() {
-    imprimeEstruturaDoMenu("----- LISTAGEM DE CURSOS ------");
+  public static void listarItens(List<? extends Item> lista) {
+    imprimeEstruturaDoMenu("---------- LISTAGEM -----------");
     imprimeEstruturaDoMenu(SEPARADOR);
-    if (!cursos.isEmpty()) {
-      cursos.forEach(curso -> imprimeMensagemDeSaida(curso.imprimir()));
-      imprimeMensagemDeSaida("Total de " + cursos.size() + " cursos(s) cadastrado(s).");
+    if (!lista.isEmpty()) {
+      lista.forEach(item -> {
+        switch (item) {
+          case Turma turma ->          
+            imprimeMensagemDeSaida(String.format("%s%n%s: %d", turma.imprimir(), 
+              "Capacidade atual", turma.calcularCapacidadeAtual(estudantes)));
+          default -> imprimeMensagemDeSaida(item.imprimir());
+      }}); 
     } else {
-      imprimeMensagemDeSaida("Nenhum curso cadastrado.");
-    }
-  }
-
-  public static void listarTurmas() {
-    imprimeEstruturaDoMenu("----- LISTAGEM DE TURMAS ------");
-    imprimeEstruturaDoMenu(SEPARADOR);
-    if (!turmas.isEmpty()) {
-      turmas.forEach(turma -> imprimeMensagemDeSaida(turma.imprimir(estudantes)));
-      imprimeMensagemDeSaida("Total de " + turmas.size() + " turma(s) cadastrada(s).");
-    } else {
-      imprimeMensagemDeSaida("Nenhuma turma cadastrada.");
-    }
-  }
-
-  public static void listarEstudantes() {
-    imprimeEstruturaDoMenu("--- LISTAGEM DE ESTUDANTES ----");
-    imprimeEstruturaDoMenu(SEPARADOR);
-    if (!estudantes.isEmpty()) {
-      estudantes.forEach(estudante -> imprimeMensagemDeSaida(estudante.imprimir()));
-      imprimeMensagemDeSaida("Total de " + estudantes.size() + " estudante(s) cadastrado(s).");
-    } else {
-      imprimeMensagemDeSaida("Nenhum estudante cadastrado.");
+      imprimeMensagemDeSaida("Nenhum item cadastrado.");
     }
   }
 

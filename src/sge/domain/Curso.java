@@ -1,6 +1,6 @@
 package sge.domain;
 
-public record Curso(String codigo, String nome, int cargaHoraria, Nivel nivel) {
+public record Curso(String codigo, String nome, int cargaHoraria, Nivel nivel) implements Item{
 
   public String imprimir() {
     return String.format("""

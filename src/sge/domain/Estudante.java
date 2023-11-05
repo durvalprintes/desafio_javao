@@ -11,7 +11,7 @@ public record Estudante(
   LocalDate dtNascimento, 
   String telefone, 
   Endereco endereco, 
-  String turma) {
+  String turma) implements Item {
 
   public String imprimir() {
     return String.format("""
