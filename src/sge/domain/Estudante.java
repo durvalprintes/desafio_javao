@@ -4,25 +4,25 @@ import java.time.LocalDate;
 
 import sge.persistence.Arquivo;
 
-public record Estudante(
-  String nome, 
-  String cpf, 
-  String email, 
-  LocalDate dtNascimento, 
-  String telefone, 
-  Endereco endereco, 
-  String turma) implements Item {
+public record Estudante (
+  String nome,
+  String cpf,
+  String email,
+  LocalDate dtNascimento,
+  String telefone,
+  Endereco endereco,
+  String turma) implements TipoCadastro {
 
-  public String imprimir() {
-    return String.format("""
-      Nome: %s
-      CPF: %s
-      E-mail: %s
-      Data de Nascimento: %s
-      Telefone: %s
-      Endereço: %s
-      Código da Turma: %s""", nome, cpf, email, Arquivo.FORMATO_DATA.format(dtNascimento), telefone, endereco.imprime(),
-       turma);
+  @Override
+  public String toString() {
+    return STR."""
+      Nome: \{nome}
+      CPF: \{cpf}
+      E-mail: \{email}
+      Data de Nascimento: \{Arquivo.FORMATO_DATA.format(dtNascimento)}
+      Telefone: \{telefone}
+      Endereço: \{endereco}
+      Código da Turma: \{turma}""";
   }
 
 }
