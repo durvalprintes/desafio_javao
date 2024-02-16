@@ -16,13 +16,15 @@ public record Turma (
 
   @Override
   public String toString() {
-    return STR."""
-      Código: \{codigo}
-      Data de Início: \{Arquivo.FORMATO_DATA.format(dtInicio)}
-      Data de Término: \{ Arquivo.FORMATO_DATA.format(dtFinal)}
-      Código do Curso: \{curso}
-      Capacidade máxima: \{capacidade}
-      Vagas disponíveis: \{new CadastroEstudante().calcularVagaDisponivel(codigo, capacidade)}""";
+    return String.format("""
+      Código: %s
+      Data de Início: %s
+      Data de Término: %s
+      Código do Curso: %s
+      Capacidade máxima: %s
+      Vagas disponíveis: %s""",
+      codigo, Arquivo.FORMATO_DATA.format(dtInicio), Arquivo.FORMATO_DATA.format(dtFinal),
+      curso, capacidade, new CadastroEstudante().calcularVagaDisponivel(codigo, capacidade));
   }
 
 }

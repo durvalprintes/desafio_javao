@@ -69,17 +69,16 @@ public class CadastroEstudante implements Cadastro {
 
   @Override
   public void salvar() throws SgeException {
-    Arquivo.salvarLinha(PATH_ESTUDANTES, STR."""
-      \{this.novoEstudante.nome()},\
-      \{this.novoEstudante.cpf()},\
-      \{this.novoEstudante.email()},\
-      \{Arquivo.FORMATO_DATA.format(this.novoEstudante.dtNascimento())},\
-      \{this.novoEstudante.telefone()},\
-      \{this.novoEstudante.endereco().cep()},\
-      \{this.novoEstudante.endereco().logradouro()},\
-      \{this.novoEstudante.endereco().numero()},\
-      \{this.novoEstudante.turma()}
-      """);
+    Arquivo.salvarLinha(PATH_ESTUDANTES, String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s%n",
+      this.novoEstudante.nome(),
+      this.novoEstudante.cpf(),
+      this.novoEstudante.email(),
+      Arquivo.FORMATO_DATA.format(this.novoEstudante.dtNascimento()),
+      this.novoEstudante.telefone(),
+      this.novoEstudante.endereco().cep(),
+      this.novoEstudante.endereco().logradouro(),
+      this.novoEstudante.endereco().numero(),
+      this.novoEstudante.turma()));
   }
 
   public int calcularVagaDisponivel(String codigoTurma, int capacidadeTurma) {

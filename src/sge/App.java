@@ -62,11 +62,14 @@ public class App {
     imprimeEstruturaDoMenu("-------- NOVO CADASTRO --------");
     imprimeEstruturaDoMenu(SEPARADOR);
     var campos = new HashMap<String, String>();
-    switch (cadastro) {
-      case CadastroCurso _ -> cadastrarCurso(campos);
-      case CadastroTurma _ -> cadastrarTurma(campos);
-      case CadastroEstudante _ -> cadastrarEstudante(campos);
-      default -> throw new SgeException("Cadastro não identificado.");
+    if (cadastro instanceof CadastroCurso) {
+      cadastrarCurso(campos);
+    } else if (cadastro instanceof CadastroTurma) {
+      cadastrarTurma(campos);
+    } else if (cadastro instanceof CadastroEstudante) {
+      cadastrarEstudante(campos);
+    } else {
+      throw new SgeException("Cadastro não identificado.");
     }
     imprimeEstruturaDoMenu(SEPARADOR);
     try {
@@ -74,7 +77,7 @@ public class App {
       cadastro.salvar();
       imprimeMensagemDeSaida("Cadastro realizado com sucesso!");
     } catch (Exception e) {
-      imprimeMensagemErrorDeSaida(STR."Erro no cadastro. Entrada incorreta. \{e.getMessage()}");
+      imprimeMensagemErrorDeSaida("Erro no cadastro. Entrada incorreta. " + e.getMessage());
     }
   }
 
@@ -137,7 +140,7 @@ public class App {
   }
 
   private static void imprimeOpcaoMenu(int opcao, String descricao) {
-    imprimeEstruturaDoMenu(STR."\{opcao} - \{descricao}");
+    imprimeEstruturaDoMenu(String.format("%d - %s", opcao, descricao));
   }
 
   private static void imprimeEstruturaDoMenu(String estrutura) {
@@ -145,15 +148,15 @@ public class App {
   }
 
   private static void imprimeMensagemDeLeitura(String campo) {
-    System.out.print(STR."Informe \{campo}: ");
+    System.out.print(String.format("Informe %s: ", campo));
   }
 
   private static void imprimeMensagemDeSaida(Object mensagem) {
-    System.out.println(STR.">> \{mensagem}");
+    System.out.println(">> " + mensagem);
   }
 
   private static void imprimeMensagemErrorDeSaida(String mensagem) {
-    System.err.println(STR.">> \{mensagem}");
+    System.err.println(">> " + mensagem);
   }
 
 }

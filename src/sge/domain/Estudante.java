@@ -15,14 +15,15 @@ public record Estudante (
 
   @Override
   public String toString() {
-    return STR."""
-      Nome: \{nome}
-      CPF: \{cpf}
-      E-mail: \{email}
-      Data de Nascimento: \{Arquivo.FORMATO_DATA.format(dtNascimento)}
-      Telefone: \{telefone}
-      Endereço: \{endereco}
-      Código da Turma: \{turma}""";
+    return String.format("""
+      Nome: %s
+      CPF: %s
+      E-mail: %s
+      Data de Nascimento: %s
+      Telefone: %s
+      Endereço: %s
+      Código da Turma: %s""",
+      nome, cpf, email, Arquivo.FORMATO_DATA.format(dtNascimento), telefone, endereco, turma);
   }
 
 }

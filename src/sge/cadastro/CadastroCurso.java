@@ -56,12 +56,11 @@ public class CadastroCurso implements Cadastro {
 
   @Override
   public void salvar() throws SgeException {
-    Arquivo.salvarLinha(PATH_CURSOS, STR."""
-      \{this.novoCurso.codigo()},\
-      \{this.novoCurso.nome()},\
-      \{this.novoCurso.cargaHoraria()},\
-      \{this.novoCurso.nivel()}
-      """);
+    Arquivo.salvarLinha(PATH_CURSOS, String.format("%s,%s,%d,%s%n",
+      this.novoCurso.codigo(),
+      this.novoCurso.nome(),
+      this.novoCurso.cargaHoraria(),
+      this.novoCurso.nivel()));
   }
 
 }

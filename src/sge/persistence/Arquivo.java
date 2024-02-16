@@ -28,7 +28,7 @@ public class Arquivo {
         linhas.forEach(linha -> campos.add(linha.split(",")));
       }
     } catch (Exception e) {
-      throw new SgeException(STR."Erro ao carregar dados cadastrados. Arquivo \{path}. \{e.getMessage()}");
+      throw new SgeException("Erro ao carregar dados cadastrados. Arquivo " + path + e.getMessage());
     }
     return campos;
   }
@@ -37,7 +37,7 @@ public class Arquivo {
     try {
       Files.writeString(Path.of(path), linha, StandardOpenOption.APPEND);
     } catch (IOException e) {
-      throw new SgeException(STR."Erro ao salvar linha no arquivo \{path}. \{e.getMessage()}");
+      throw new SgeException("Erro ao salvar linha no arquivo " + path + e.getMessage());
     }
   }
 

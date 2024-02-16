@@ -8,11 +8,12 @@ public record Curso(
 
   @Override
   public String toString() {
-    return STR."""
-      Código: \{codigo}
-      Nome: \{nome}
-      Carga Horária: \{cargaHoraria}h
-      Nível: \{nivel}""";
+    return String.format("""
+      Código: %s
+      Nome: %s
+      Carga Horária: %sh
+      Nível: %s""",
+      codigo, nome, cargaHoraria, nivel);
   }
 
 }

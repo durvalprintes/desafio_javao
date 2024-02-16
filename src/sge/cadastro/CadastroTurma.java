@@ -77,14 +77,13 @@ public class CadastroTurma implements Cadastro {
 
   @Override
   public void salvar() throws SgeException {
-    Arquivo.salvarLinha(PATH_TURMAS, STR."""
-      \{this.novaTurma.codigo()},\
-      \{Arquivo.FORMATO_DATA.format(this.novaTurma.dtInicio())},\
-      \{Arquivo.FORMATO_DATA.format(this.novaTurma.dtFinal())},\
-      \{this.novaTurma.periodo()},\
-      \{this.novaTurma.capacidade()},\
-      \{this.novaTurma.curso()}
-      """);
+    Arquivo.salvarLinha(PATH_TURMAS, String.format("%s,%s,%s,%s,%s,%s%n",
+      this.novaTurma.codigo(),
+      Arquivo.FORMATO_DATA.format(this.novaTurma.dtInicio()),
+      Arquivo.FORMATO_DATA.format(this.novaTurma.dtFinal()),
+      this.novaTurma.periodo(),
+      this.novaTurma.capacidade(),
+      this.novaTurma.curso()));
   }
 
 }
