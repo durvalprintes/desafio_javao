@@ -9,10 +9,17 @@ public record Curso(
   @Override
   public String toString() {
     return STR."""
-      Código: \{codigo}
-      Nome: \{nome}
-      Carga Horária: \{cargaHoraria}h
-      Nível: \{nivel}""";
+      Código:\{codigo}
+      Nome:\{nome}
+      Carga Horária:\{cargaHoraria}h
+      Nível:\{nivel}""";
+  }
+
+  @Override
+  public String salvar() {
+    return STR."""
+      \{codigo},\{nome},\{cargaHoraria},\{nivel}
+      """;
   }
 
 }

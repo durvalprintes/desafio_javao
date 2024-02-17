@@ -3,17 +3,16 @@ package sge.cadastro;
 import java.util.List;
 import java.util.Map;
 
-import sge.domain.TipoCadastro;
 import sge.exception.SgeException;
 
-public interface Cadastro {
+public interface Cadastro<T> {
 
-  Map<String, String> informarCampos();
-  
-  void validar(Map<String, String> campos) throws SgeException;
-  
+  Map<String, String> getCampos();
+
+  List<T> listar() throws SgeException;
+
+  void validar() throws SgeException;
+
   void salvar() throws SgeException;
-  
-  List<TipoCadastro> carregarLista() throws SgeException;
 
 }

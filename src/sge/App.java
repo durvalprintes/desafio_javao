@@ -2,11 +2,11 @@ package sge;
 
 import java.util.Scanner;
 
-import sge.cadastro.Cadastro;
 import sge.cadastro.CadastroCurso;
 import sge.cadastro.CadastroEstudante;
 import sge.cadastro.CadastroTurma;
-import sge.exception.SgeException;
+import sge.cadastro.NovoCadastro;
+import sge.domain.TipoCadastro;
 
 public class App {
 
@@ -14,35 +14,31 @@ public class App {
   private static final Scanner LEITOR = new Scanner(System.in);
 
   public static void main(String[] args) {
+    imprimeEstruturaDoMenu(SEPARADOR);
+    imprimeEstruturaDoMenu("SISTEMA DE GESTÃO ESCOLAR - SGE\n");
+    imprimeEstruturaDoMenu("-------- MENU CADASTRO --------");
     var opcao = "0";
     var cadastroCurso = new CadastroCurso();
     var cadastroTurma = new CadastroTurma();
     var cadastroEstudante = new CadastroEstudante();
-    try {
+    while (!opcao.equals("7")) {
       imprimeEstruturaDoMenu(SEPARADOR);
-      imprimeEstruturaDoMenu("SISTEMA DE GESTÃO ESCOLAR - SGE\n");
-      imprimeEstruturaDoMenu("-------- MENU CADASTRO --------");
-      while (!opcao.equals("7")) {
-        imprimeEstruturaDoMenu(SEPARADOR);
-        imprimeMenuCadastro();
-        imprimeEstruturaDoMenu(SEPARADOR);
-        imprimeMensagemDeLeitura("uma opção do menu");
-        opcao = LEITOR.nextLine();
-        imprimeEstruturaDoMenu(SEPARADOR);
-        switch (opcao) {
-          case "1" -> cadastrar(cadastroCurso);
-          case "2" -> cadastrar(cadastroTurma);
-          case "3" -> cadastrar(cadastroEstudante);
-          case "4" -> listarCadastro(cadastroCurso);
-          case "5" -> listarCadastro(cadastroTurma);
-          case "6" -> listarCadastro(cadastroEstudante);
-          case "7" -> imprimeMensagemDeSaida("Encerrando cadastro...");
-          default -> imprimeMensagemDeSaida("Opção desconhecida. Selecione uma opção válida.");
-        }
-        imprimeMensagemDeSaida("");
+      imprimeMenuCadastro();
+      imprimeEstruturaDoMenu(SEPARADOR);
+      imprimeMensagemDeLeitura("uma opção do menu");
+      opcao = LEITOR.nextLine();
+      imprimeEstruturaDoMenu(SEPARADOR);
+      switch (opcao) {
+        case "1" -> cadastrar(cadastroCurso);
+        case "2" -> cadastrar(cadastroTurma);
+        case "3" -> cadastrar(cadastroEstudante);
+        case "4" -> listarCadastro(cadastroCurso);
+        case "5" -> listarCadastro(cadastroTurma);
+        case "6" -> listarCadastro(cadastroEstudante);
+        case "7" -> imprimeMensagemDeSaida("Encerrando cadastro...");
+        default -> imprimeMensagemDeSaida("Opção desconhecida. Selecione uma opção válida.");
       }
-    } catch (Exception e) {
-      imprimeMensagemErrorDeSaida(e.getMessage());
+      imprimeMensagemDeSaida("");
     }
   }
 
@@ -56,17 +52,17 @@ public class App {
     imprimeOpcaoMenu(7, "Sair");
   }
 
-  private static void cadastrar(Cadastro cadastro) throws SgeException {
+  private static void cadastrar(NovoCadastro<? extends TipoCadastro> cadastro) {
     imprimeEstruturaDoMenu("-------- NOVO CADASTRO --------");
     imprimeEstruturaDoMenu(SEPARADOR);
-    var campos = cadastro.informarCampos();
-    campos.entrySet().forEach(campo -> {
+    cadastro.getCampos()
+      .entrySet().forEach(campo -> {
         imprimeMensagemDeLeitura(campo.getValue());
         campo.setValue(LEITOR.nextLine().toUpperCase());
       });
     imprimeEstruturaDoMenu(SEPARADOR);
     try {
-      cadastro.validar(campos);
+      cadastro.validar();
       cadastro.salvar();
       imprimeMensagemDeSaida("Cadastro realizado com sucesso!");
     } catch (Exception e) {
@@ -74,14 +70,18 @@ public class App {
     }
   }
 
-  private static void listarCadastro(Cadastro cadastro) throws SgeException {
-    var lista = cadastro.carregarLista();
+  private static void listarCadastro(NovoCadastro<? extends TipoCadastro> cadastro) {
     imprimeEstruturaDoMenu("---------- LISTAGEM -----------");
     imprimeEstruturaDoMenu(SEPARADOR);
-    if (!lista.isEmpty()) {
+    try {
+      var lista = cadastro.listar();
+      if (lista.isEmpty()) {
+        imprimeMensagemDeSaida("Nenhum cadastro encontrado.");
+        return;
+      }
       lista.forEach(App::imprimeMensagemDeSaida);
-    } else {
-      imprimeMensagemDeSaida("Nenhum cadastro encontrado.");
+    } catch (Exception e) {
+      imprimeMensagemErrorDeSaida(STR."Erro na listagem. \{e.getMessage()}");
     }
   }
 

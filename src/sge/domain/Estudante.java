@@ -2,7 +2,7 @@ package sge.domain;
 
 import java.time.LocalDate;
 
-import sge.persistence.Arquivo;
+import sge.Sistema;
 
 public record Estudante (
   String nome,
@@ -16,13 +16,20 @@ public record Estudante (
   @Override
   public String toString() {
     return STR."""
-      Nome: \{nome}
-      CPF: \{cpf}
-      E-mail: \{email}
-      Data de Nascimento: \{Arquivo.FORMATO_DATA.format(dtNascimento)}
-      Telefone: \{telefone}
-      Endereço: \{endereco}
-      Código da Turma: \{turma}""";
+      Nome:\{nome}
+      CPF:\{cpf}
+      E-mail:\{email}
+      Data de Nascimento:\{Sistema.FORMATO_DATA.format(dtNascimento)}
+      Telefone:\{telefone}
+      Endereço:\{endereco}
+      Código da Turma:\{turma}""";
+  }
+
+  @Override
+  public String salvar() {
+    return STR."""
+        \{nome},\{cpf},\{email},\{Sistema.FORMATO_DATA.format(dtNascimento)},\{telefone},\{endereco.salvar()},\{turma}
+        """;
   }
 
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,32 +11,30 @@ import sge.exception.SgeException;
 
 public class Arquivo {
 
-  public static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
   private Arquivo() {}
 
-  public static List<String[]> carregarArquivo(String path) throws SgeException {
+  public static List<String[]> carregar(String caminhoArquivo) throws SgeException {
     var campos = new ArrayList<String[]>();
     try {
-      var arquivo = Path.of(path);
+      var arquivo = Path.of(caminhoArquivo);
       if (!Files.exists(arquivo)) {
         Files.createDirectories(arquivo.getParent());
         Files.createFile(arquivo);
       } else {
-        var linhas = Files.readAllLines(arquivo);
-        linhas.forEach(linha -> campos.add(linha.split(",")));
+        var cadastros = Files.readAllLines(arquivo);
+        cadastros.forEach(cadastro -> campos.add(cadastro.split(",")));
       }
     } catch (Exception e) {
-      throw new SgeException(STR."Erro ao carregar dados cadastrados. Arquivo \{path}. \{e.getMessage()}");
+      throw new SgeException(STR."Erro ao carregar cadastrados. Arquivo \{caminhoArquivo}. \{e.getMessage()}");
     }
     return campos;
   }
 
-  public static void salvarLinha(String path, String linha) throws SgeException {
+  public static void salvar(String caminhoArquivo, String cadastro) throws SgeException {
     try {
-      Files.writeString(Path.of(path), linha, StandardOpenOption.APPEND);
+      Files.writeString(Path.of(caminhoArquivo), cadastro, StandardOpenOption.APPEND);
     } catch (IOException e) {
-      throw new SgeException(STR."Erro ao salvar linha no arquivo \{path}. \{e.getMessage()}");
+      throw new SgeException(STR."Erro ao salvar novo cadastro no arquivo \{caminhoArquivo}. \{e.getMessage()}");
     }
   }
 

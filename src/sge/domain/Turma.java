@@ -2,8 +2,7 @@ package sge.domain;
 
 import java.time.LocalDate;
 
-import sge.cadastro.CadastroEstudante;
-import sge.persistence.Arquivo;
+import sge.Sistema;
 
 public record Turma (
   String codigo,
@@ -17,12 +16,21 @@ public record Turma (
   @Override
   public String toString() {
     return STR."""
-      Código: \{codigo}
-      Data de Início: \{Arquivo.FORMATO_DATA.format(dtInicio)}
-      Data de Término: \{ Arquivo.FORMATO_DATA.format(dtFinal)}
-      Código do Curso: \{curso}
-      Capacidade máxima: \{capacidade}
-      Vagas disponíveis: \{new CadastroEstudante().calcularVagaDisponivel(codigo, capacidade)}""";
+      Código:\{codigo}
+      Data de Início:\{Sistema.FORMATO_DATA.format(dtInicio)}
+      Data de Término:\{Sistema.FORMATO_DATA.format(dtFinal)}
+      Periodo:\{periodo}
+      Código do Curso:\{curso}
+      Capacidade máxima:\{capacidade}
+      Vagas disponíveis:\{capacidadeAtual}""";
+  }
+
+  @Override
+  public String salvar() {
+    return STR."""
+      \{codigo},\{Sistema.FORMATO_DATA.format(dtInicio)},{Sistema.FORMATO_DATA.format(dtFinal)},\{periodo},\
+      \{capacidade},\{curso}
+      """;
   }
 
 }
