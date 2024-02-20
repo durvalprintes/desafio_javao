@@ -10,10 +10,4 @@ public record Endereco (
     return String.format("CEP %s, %s, %s", cep, logradouro, numero);
   }
 
-  @Override
-  public String salvar() {
-    return STR."""
-      \{cep},\{logradouro},\{numero}""";
-  }
-
 }

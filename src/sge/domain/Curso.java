@@ -15,11 +15,4 @@ public record Curso(
       Nível:\{nivel}""";
   }
 
-  @Override
-  public String salvar() {
-    return STR."""
-      \{codigo},\{nome},\{cargaHoraria},\{nivel}
-      """;
-  }
-
 }

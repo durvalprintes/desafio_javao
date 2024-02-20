@@ -8,11 +8,12 @@ import sge.Sistema;
 import sge.domain.Endereco;
 import sge.domain.Estudante;
 import sge.exception.SgeException;
+import sge.persistence.util.ArquivoUtil;
 
 public class CadastroEstudante extends NovoCadastro<Estudante> {
 
   public CadastroEstudante() {
-    arquivo = Sistema.CAMINHO_ARQUIVO_ESTUDANTE;
+    arquivo = ArquivoUtil.getTipoArquivo(Sistema.CAMINHO_ARQUIVO_ESTUDANTE, Estudante.class);
   }
 
   @Override
@@ -26,12 +27,6 @@ public class CadastroEstudante extends NovoCadastro<Estudante> {
     campos.put("logradouro", "o logradouro do endereço");
     campos.put("numero", "o número do endereço");
     campos.put(Sistema.CAMPO_CODIGO_TURMA, "o código da turma");
-  }
-
-  @Override
-  protected Estudante criarTipoCadastro(String[] campo) {
-    return new Estudante(campo[0], campo[1], campo[2], LocalDate.parse(campo[3], Sistema.FORMATO_DATA), campo[4],
-      new Endereco(campo[5], campo[6], campo[7]), campo[8]);
   }
 
   @Override

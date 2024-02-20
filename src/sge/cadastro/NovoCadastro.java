@@ -10,8 +10,8 @@ import sge.persistence.Arquivo;
 
 public abstract class NovoCadastro<T extends TipoCadastro> implements Cadastro<T> {
 
-  protected String arquivo;
   protected TipoCadastro cadastro;
+  protected Arquivo<T> arquivo;
   protected Map<String, String> campos = new LinkedHashMap<>();
 
   @Override
@@ -24,17 +24,12 @@ public abstract class NovoCadastro<T extends TipoCadastro> implements Cadastro<T
 
   @Override
   public List<T> listar() throws SgeException {
-    return Arquivo.carregar(arquivo)
-      .stream()
-      .map(this::criarTipoCadastro)
-      .toList();
+    return arquivo.carregar();
   }
-
-  protected abstract T criarTipoCadastro(String[] campo);
 
   @Override
   public void salvar() throws SgeException {
-    Arquivo.salvar(arquivo, cadastro.salvar());
+    arquivo.salvar(cadastro);
   }
 
 }

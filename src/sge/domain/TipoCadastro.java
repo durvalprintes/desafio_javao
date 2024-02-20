@@ -1,10 +1,7 @@
 package sge.domain;
 
-public sealed interface TipoCadastro
-    permits Curso, Turma, Estudante, Endereco {
+public sealed interface TipoCadastro permits Curso, Turma, Estudante, Endereco {
 
     String toString();
-
-    String salvar();
 
 }

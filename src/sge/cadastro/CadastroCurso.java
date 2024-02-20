@@ -8,11 +8,12 @@ import sge.Sistema;
 import sge.domain.Curso;
 import sge.domain.Nivel;
 import sge.exception.SgeException;
+import sge.persistence.util.ArquivoUtil;
 
 public class CadastroCurso extends NovoCadastro<Curso> {
 
   public CadastroCurso() {
-    arquivo = Sistema.CAMINHO_ARQUIVO_CURSO;
+    arquivo = ArquivoUtil.getTipoArquivo(Sistema.CAMINHO_ARQUIVO_CURSO, Curso.class);
   }
 
   @Override
@@ -21,11 +22,6 @@ public class CadastroCurso extends NovoCadastro<Curso> {
     campos.put("nome", "o nome");
     campos.put(Sistema.CAMPO_CARGA_HORARIA, "a carga horária (HORAS)");
     campos.put("nivel", "o nível (BASICO, INTERMEDIARIO, AVANCADO)");
-  }
-
-  @Override
-  protected Curso criarTipoCadastro(String[] campo) {
-    return new Curso(campo[0], campo[1], Integer.parseInt(campo[2]), Nivel.valueOf(campo[3]));
   }
 
   @Override

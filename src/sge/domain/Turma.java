@@ -2,6 +2,8 @@ package sge.domain;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import sge.Sistema;
 
 public record Turma (
@@ -11,6 +13,7 @@ public record Turma (
   Periodo periodo,
   int capacidade,
   String curso,
+  @JsonIgnore
   int capacidadeAtual) implements TipoCadastro {
 
   @Override
@@ -23,14 +26,6 @@ public record Turma (
       Código do Curso:\{curso}
       Capacidade máxima:\{capacidade}
       Vagas disponíveis:\{capacidadeAtual}""";
-  }
-
-  @Override
-  public String salvar() {
-    return STR."""
-      \{codigo},\{Sistema.FORMATO_DATA.format(dtInicio)},{Sistema.FORMATO_DATA.format(dtFinal)},\{periodo},\
-      \{capacidade},\{curso}
-      """;
   }
 
 }

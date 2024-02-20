@@ -1,41 +1,41 @@
 package sge.persistence;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
 
+import sge.domain.TipoCadastro;
 import sge.exception.SgeException;
 
-public class Arquivo {
+public abstract class Arquivo<T extends TipoCadastro> implements Repositorio<T> {
 
-  private Arquivo() {}
+  protected String caminhoArquivo;
+  protected Class<T> tipoCadastro;
+  private static final String MENSAGEM_ERROR = "Erro ao carregar cadastrados. Arquivo";
 
-  public static List<String[]> carregar(String caminhoArquivo) throws SgeException {
-    var campos = new ArrayList<String[]>();
+  public List<String> carregarLinhas(String caminhoArquivo) throws SgeException {
     try {
-      var arquivo = Path.of(caminhoArquivo);
-      if (!Files.exists(arquivo)) {
-        Files.createDirectories(arquivo.getParent());
-        Files.createFile(arquivo);
-      } else {
-        var cadastros = Files.readAllLines(arquivo);
-        cadastros.forEach(cadastro -> campos.add(cadastro.split(",")));
-      }
+      return Files.readAllLines(this.getArquivo(caminhoArquivo));
     } catch (Exception e) {
-      throw new SgeException(STR."Erro ao carregar cadastrados. Arquivo \{caminhoArquivo}. \{e.getMessage()}");
+      throw new SgeException(STR."\{MENSAGEM_ERROR} \{caminhoArquivo}. \{e.getMessage()}");
     }
-    return campos;
   }
 
-  public static void salvar(String caminhoArquivo, String cadastro) throws SgeException {
+  public byte[] carregarBytes(String caminhoArquivo) throws SgeException {
     try {
-      Files.writeString(Path.of(caminhoArquivo), cadastro, StandardOpenOption.APPEND);
-    } catch (IOException e) {
-      throw new SgeException(STR."Erro ao salvar novo cadastro no arquivo \{caminhoArquivo}. \{e.getMessage()}");
+      return Files.readAllBytes(this.getArquivo(caminhoArquivo));
+    } catch (Exception e) {
+      throw new SgeException(STR."\{MENSAGEM_ERROR} \{caminhoArquivo}. \{e.getMessage()}");
     }
+  }
+
+  private Path getArquivo(String caminhoArquivo) throws Exception {
+    var arquivo = Path.of(caminhoArquivo);
+    if (!Files.exists(arquivo)) {
+      Files.createDirectories(arquivo.getParent());
+      Files.createFile(arquivo);
+    }
+    return arquivo;
   }
 
 }

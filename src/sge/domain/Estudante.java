@@ -25,11 +25,4 @@ public record Estudante (
       Código da Turma:\{turma}""";
   }
 
-  @Override
-  public String salvar() {
-    return STR."""
-        \{nome},\{cpf},\{email},\{Sistema.FORMATO_DATA.format(dtNascimento)},\{telefone},\{endereco.salvar()},\{turma}
-        """;
-  }
-
 }

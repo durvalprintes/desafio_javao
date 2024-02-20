@@ -9,11 +9,12 @@ import sge.Sistema;
 import sge.domain.Periodo;
 import sge.domain.Turma;
 import sge.exception.SgeException;
+import sge.persistence.util.ArquivoUtil;
 
 public class CadastroTurma extends NovoCadastro<Turma> {
 
   public CadastroTurma() {
-    arquivo = Sistema.CAMINHO_ARQUIVO_TURMA;
+    arquivo = ArquivoUtil.getTipoArquivo(Sistema.CAMINHO_ARQUIVO_TURMA, Turma.class);
   }
 
   @Override
@@ -24,13 +25,6 @@ public class CadastroTurma extends NovoCadastro<Turma> {
     campos.put("periodo", "o período (MATUTINO, VESPERTINO, NOTURNO, SABADO)");
     campos.put("capacidade", "a capacidade");
     campos.put(Sistema.CAMPO_CODIGO_CURSO, "o código do curso");
-  }
-
-  @Override
-  protected Turma criarTipoCadastro(String[] campo) {
-    return new Turma(campo[0], LocalDate.parse(campo[1], Sistema.FORMATO_DATA),
-      LocalDate.parse(campo[2], Sistema.FORMATO_DATA), Periodo.valueOf(campo[3]), Integer.parseInt(campo[4]), campo[5],
-      new CadastroEstudante().calcularVagaDisponivel(campo[0], Integer.parseInt(campo[4])));
   }
 
   @Override
