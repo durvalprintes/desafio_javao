@@ -17,15 +17,16 @@ public record Turma (
   int capacidadeAtual) implements TipoCadastro {
 
   @Override
-  public String toString() {
-    return STR."""
-      Código:\{codigo}
-      Data de Início:\{Sistema.FORMATO_DATA.format(dtInicio)}
-      Data de Término:\{Sistema.FORMATO_DATA.format(dtFinal)}
-      Periodo:\{periodo}
-      Código do Curso:\{curso}
-      Capacidade máxima:\{capacidade}
-      Vagas disponíveis:\{capacidadeAtual}""";
+  @JsonIgnore
+  public String[] getValores() {
+    return new String[] {codigo, Sistema.FORMATO_DATA.format(dtInicio), Sistema.FORMATO_DATA.format(dtFinal),
+      periodo.name(), String.valueOf(capacidade), curso, String.valueOf(capacidadeAtual)};
+  }
+
+  @Override
+  @JsonIgnore
+  public String getIdentificador() {
+    return codigo;
   }
 
 }

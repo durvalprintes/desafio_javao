@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+import sge.cadastro.Operacao;
 import sge.domain.TipoCadastro;
 import sge.exception.SgeException;
 import sge.persistence.util.CsvUtil;
@@ -28,9 +29,22 @@ public class Csv<T extends TipoCadastro> extends Arquivo<T> {
     }
   }
 
-  public void salvar(TipoCadastro cadastro) throws SgeException {
+  public void salvar(TipoCadastro cadastro, Operacao operacao, int indiceCadastro) throws SgeException {
     try {
-      Files.writeString(Path.of(caminhoArquivo), CsvUtil.toCsv(cadastro), StandardOpenOption.APPEND);
+      //TODO: TESTAR AS OPERACOES DE EDITAR E EXCLUIR
+      if (operacao.equals(Operacao.ADICIONAR)) {
+        Files.writeString(Path.of(caminhoArquivo), CsvUtil.toCsv(cadastro), StandardOpenOption.APPEND);
+      } else {
+        var lista = this.carregar();
+        if (operacao.equals(Operacao.EDITAR)) {
+          lista.set(indiceCadastro, tipoCadastro.cast(cadastro));
+        } else {
+          lista.remove(indiceCadastro);
+        }
+        for (T item : lista) {
+          Files.writeString(Path.of(caminhoArquivo), CsvUtil.toCsv(item));
+        }
+      }
     } catch (IOException e) {
       throw new SgeException(STR."Erro ao salvar novo cadastro no arquivo \{caminhoArquivo}. \{e.getMessage()}");
     }

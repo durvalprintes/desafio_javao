@@ -2,6 +2,8 @@ package sge.domain;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import sge.Sistema;
 
 public record Estudante (
@@ -14,15 +16,16 @@ public record Estudante (
   String turma) implements TipoCadastro {
 
   @Override
-  public String toString() {
-    return STR."""
-      Nome:\{nome}
-      CPF:\{cpf}
-      E-mail:\{email}
-      Data de Nascimento:\{Sistema.FORMATO_DATA.format(dtNascimento)}
-      Telefone:\{telefone}
-      Endereço:\{endereco}
-      Código da Turma:\{turma}""";
+  @JsonIgnore
+  public String[] getValores() {
+    return new String[]{nome, cpf, email, Sistema.FORMATO_DATA.format(dtNascimento),telefone,endereco.cep(),
+      endereco.logradouro(), endereco.numero(),turma};
+  }
+
+  @Override
+  @JsonIgnore
+  public String getIdentificador() {
+    return cpf;
   }
 
 }

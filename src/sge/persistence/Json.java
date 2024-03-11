@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import sge.cadastro.Operacao;
 import sge.domain.TipoCadastro;
 import sge.exception.SgeException;
 import sge.persistence.util.JsonUtil;
@@ -36,10 +37,14 @@ public class Json<T extends TipoCadastro> extends Arquivo<T> {
     }
   }
 
-  public void salvar(TipoCadastro cadastro) throws SgeException {
+  public void salvar(TipoCadastro cadastro, Operacao operacao, int indiceCadastro) throws SgeException {
     try {
       var cadastros = this.carregar();
-      cadastros.add(tipoCadastro.cast(cadastro));
+      switch (operacao) {
+        case Operacao.ADICIONAR -> cadastros.add(tipoCadastro.cast(cadastro));
+        case Operacao.EDITAR -> cadastros.set(indiceCadastro, tipoCadastro.cast(cadastro));
+        case Operacao.EXCLUIR -> cadastros.remove(indiceCadastro);
+      }
       LEITOR
         .writerWithDefaultPrettyPrinter()
         .writeValue(new File(caminhoArquivo), cadastros);
@@ -47,5 +52,5 @@ public class Json<T extends TipoCadastro> extends Arquivo<T> {
       throw new SgeException(e.getMessage());
     }
   }
-  
+
 }
