@@ -33,68 +33,60 @@ public class CadastroTurma extends NovoCadastro<Turma> {
   public void validar() throws SgeException {
     if (!operacao.equals(Operacao.EXCLUIR)) {
       if (!Objects
-        .requireNonNull(campos.get(Sistema.CAMPO_DT_INICIO), "Data início é obrigatória.")
-        .matches(Sistema.DATA_VALIDA)) {
+          .requireNonNull(campos.get(Sistema.CAMPO_DT_INICIO), "Data início é obrigatória.")
+          .matches(Sistema.DATA_VALIDA)) {
         throw new SgeException("Data início com formato inválido.");
       }
-  
+
       if (!Objects
-      .requireNonNull(campos.get(Sistema.CAMPO_DT_FINAL), "Data final é obrigatória.")
-      .matches(Sistema.DATA_VALIDA)) {
+          .requireNonNull(campos.get(Sistema.CAMPO_DT_FINAL), "Data final é obrigatória.")
+          .matches(Sistema.DATA_VALIDA)) {
         throw new SgeException("Data final com formato inválido.");
       }
-  
+
       var periodoEnum = Arrays
-        .stream(Periodo.values())
-        .filter(periodo ->
-          periodo.name().equals(Objects.requireNonNull(campos.get(Sistema.CAMPO_PERIODO), "Período é obrigatório.")))
-        .findAny()
-        .orElseThrow(() -> new SgeException("Periodo é inválido."));
-  
+          .stream(Periodo.values())
+          .filter(periodo -> 
+            periodo.name().equals(Objects.requireNonNull(campos.get(Sistema.CAMPO_PERIODO), "Período é obrigatório.")))
+          .findAny()
+          .orElseThrow(() -> new SgeException("Periodo é inválido."));
+
       var capacidade = campos.get(Sistema.CAMPO_CAPACIDADE);
       if (!Objects
-        .requireNonNull(capacidade, "Carga horária é obrigatória.")
-        .matches(Sistema.NUMERO_VALIDO) ||
-        Integer.parseInt(capacidade) < 1) {
+          .requireNonNull(capacidade, "Carga horária é obrigatória.")
+          .matches(Sistema.NUMERO_VALIDO) ||
+          Integer.parseInt(capacidade) < 1) {
         throw new SgeException("Carga horária é inválida.");
       }
-  
+
       if (this.verificarLista()
-        .stream()
-        .anyMatch(turma ->
-          turma.codigo().equals(
-            Objects.requireNonNull(campos.get(Sistema.CAMPO_CODIGO), "Código é obrigatório.")))) {
+          .stream()
+          .anyMatch(turma -> 
+            turma.codigo().equals(
+              Objects.requireNonNull(campos.get(Sistema.CAMPO_CODIGO), "Código é obrigatório.")))) {
         throw new SgeException("Código de turma já cadastrado.");
       }
-  
+
       if (new CadastroCurso().listar()
-        .stream()
-        .noneMatch(curso ->
-          curso.codigo().equals(
-            Objects.requireNonNull(campos.get(Sistema.CAMPO_CURSO), "Código do Curso é obrigatório.")))) {
+          .stream()
+          .noneMatch(curso -> 
+            curso.codigo().equals(
+              Objects.requireNonNull(campos.get(Sistema.CAMPO_CURSO), "Código do Curso é obrigatório.")))) {
         throw new SgeException("Curso não encontrado.");
       }
-  
+
       cadastro = new Turma(campos.get(Sistema.CAMPO_CODIGO),
-        LocalDate.parse(campos.get(Sistema.CAMPO_DT_INICIO), Sistema.FORMATO_DATA),
-        LocalDate.parse(campos.get(Sistema.CAMPO_DT_FINAL), Sistema.FORMATO_DATA),
-        periodoEnum, Integer.parseInt(campos.get(Sistema.CAMPO_CAPACIDADE)),
-        campos.get(Sistema.CAMPO_CURSO), 0);
-    } else {
-      var cadastro = this.procurarIndice();
-      if (new CadastroEstudante().listar()
-        .stream()
-        .anyMatch(estudante ->
-          estudante.turma().equals(cadastro.codigo()))) {
-        throw new SgeException("Turma com estudantes cadastradas.");
-      }
+          LocalDate.parse(campos.get(Sistema.CAMPO_DT_INICIO), Sistema.FORMATO_DATA),
+          LocalDate.parse(campos.get(Sistema.CAMPO_DT_FINAL), Sistema.FORMATO_DATA),
+          periodoEnum, Integer.parseInt(campos.get(Sistema.CAMPO_CAPACIDADE)),
+          campos.get(Sistema.CAMPO_CURSO));
     }
   }
 
   @Override
   public Map<String, String> setCampos(TipoCadastro cadastro) {
-    if (cadastro instanceof Turma(String codigo, LocalDate dtInicio, LocalDate dtFinal, Periodo periodo,
-      int capacidade, String curso, _)) {
+    if (cadastro instanceof Turma(String codigo, LocalDate dtInicio, LocalDate dtFinal, Periodo periodo, int capacidade,
+     String curso)) {
       campos.put(Sistema.CAMPO_CODIGO, codigo);
       campos.put(Sistema.CAMPO_DT_INICIO, Sistema.FORMATO_DATA.format(dtInicio));
       campos.put(Sistema.CAMPO_DT_FINAL, Sistema.FORMATO_DATA.format(dtFinal));

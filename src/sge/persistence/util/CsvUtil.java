@@ -1,12 +1,11 @@
 package sge.persistence.util;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import sge.Sistema;
-import sge.cadastro.CadastroEstudante;
 import sge.domain.Curso;
 import sge.domain.Endereco;
 import sge.domain.Estudante;
@@ -20,12 +19,10 @@ public class CsvUtil {
 
   private static final String TIPO_CADASTRO_NAO_ENCONTRADO = "Tipo de cadastro nao encontrado.";
 
-  public static final Map<Class<? extends TipoCadastro>, Function<String[], TipoCadastro>> processador =
-    Map.of(
+  public static final Map<Class<? extends TipoCadastro>, Function<String[], TipoCadastro>> processador = Map.of(
       Curso.class, CsvUtil::criarCurso,
       Turma.class, CsvUtil::criarTurma,
-      Estudante.class, CsvUtil::criarEstudante
-    );
+      Estudante.class, CsvUtil::criarEstudante);
 
   private CsvUtil() {}
 
@@ -40,13 +37,12 @@ public class CsvUtil {
 
   private static TipoCadastro criarTurma(String[] linha) {
     return new Turma(linha[0], LocalDate.parse(linha[1], Sistema.FORMATO_DATA),
-        LocalDate.parse(linha[2], Sistema.FORMATO_DATA), Periodo.valueOf(linha[3]), Integer.parseInt(linha[4]), linha[5],
-        new CadastroEstudante().calcularVagaDisponivel(linha[0], Integer.parseInt(linha[4])));
+      LocalDate.parse(linha[2], Sistema.FORMATO_DATA), Periodo.valueOf(linha[3]), Integer.parseInt(linha[4]),linha[5]);
   }
 
   private static TipoCadastro criarEstudante(String[] linha) {
     return new Estudante(linha[0], linha[1], linha[2], LocalDate.parse(linha[3], Sistema.FORMATO_DATA), linha[4],
-        new Endereco(linha[5], linha[6], linha[7]), linha[8]);
+        new Endereco(linha[5], linha[6], linha[7]));
   }
 
   public static String toCsv(TipoCadastro cadastro) throws SgeException {
@@ -54,15 +50,14 @@ public class CsvUtil {
       case Curso(String codigo, String nome, int cargaHoraria, Nivel nivel) -> STR."""
         \{codigo},\{nome},\{cargaHoraria},\{nivel}
         """;
-      case Turma(String codigo, LocalDate dtInicio, LocalDate dtFinal,
-      Periodo periodo, int capacidade, String curso, _) -> STR."""
+      case Turma(String codigo, LocalDate dtInicio, LocalDate dtFinal, Periodo periodo, int capacidade, String curso) ->
+        STR."""
         \{codigo},\{Sistema.FORMATO_DATA.format(dtInicio)},\{Sistema.FORMATO_DATA.format(dtFinal)},\{periodo},\
         \{capacidade},\{curso}
         """;
-      case Estudante(String nome, String cpf, String email, LocalDate dtNascimento,
-      String telefone, Endereco(String cep, String logradouro, String numero), String turma) ->  STR."""
-        \{nome},\{cpf},\{email},\{Sistema.FORMATO_DATA.format(dtNascimento)},\{telefone},\{cep},\{logradouro},\
-        \{numero},\{turma}
+      case Estudante(String nome, String cpf, String email, LocalDate dtNascimento, String telefone,
+        Endereco(String cep, String logradouro, String numero)) -> STR."""
+        \{nome},\{cpf},\{email},\{Sistema.FORMATO_DATA.format(dtNascimento)},\{telefone},\{cep},\{logradouro},\{numero}
         """;
       default -> throw new SgeException(TIPO_CADASTRO_NAO_ENCONTRADO);
     };

@@ -6,20 +6,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import sge.Sistema;
 
-public record Estudante (
-  String nome,
-  String cpf,
-  String email,
-  LocalDate dtNascimento,
-  String telefone,
-  Endereco endereco,
-  String turma) implements TipoCadastro {
+public record Estudante(
+    String nome,
+    String cpf,
+    String email,
+    LocalDate dtNascimento,
+    String telefone,
+    Endereco endereco) implements TipoCadastro {
 
   @Override
   @JsonIgnore
   public String[] getValores() {
-    return new String[]{nome, cpf, email, Sistema.FORMATO_DATA.format(dtNascimento),telefone,endereco.cep(),
-      endereco.logradouro(), endereco.numero(),turma};
+    return new String[] { nome, cpf, email, Sistema.FORMATO_DATA.format(dtNascimento), telefone, endereco.cep(),
+        endereco.logradouro(), endereco.numero() };
   }
 
   @Override

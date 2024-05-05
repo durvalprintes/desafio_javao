@@ -3,9 +3,10 @@ package sge.gui.window;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
-import java.util.Map;
-import java.util.Objects;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -27,10 +28,10 @@ public class Cadastro extends Padrao {
 
   private NovoCadastro<? extends TipoCadastro> cadastro;
   private Map<String, Class<?>> camposComboBox = Map.of(
-    Sistema.CAMPO_NIVEL, Nivel.class,
-    Sistema.CAMPO_PERIODO,Periodo.class,
-    Sistema.CAMPO_CURSO,  TipoCadastro.class,
-    Sistema.CAMPO_TURMA, TipoCadastro.class);
+      Sistema.CAMPO_NIVEL, Nivel.class,
+      Sistema.CAMPO_PERIODO, Periodo.class,
+      Sistema.CAMPO_CURSO, TipoCadastro.class,
+      Sistema.CAMPO_TURMA, TipoCadastro.class);
   private Map<String, Component> camposFormulario = new HashMap<>();
   private DefaultTableModel dadosTabela;
 
@@ -85,9 +86,8 @@ public class Cadastro extends Padrao {
       }
       throw new SgeException(STR."Campo de formulario não definido para \{campoChave}!");
     }
-    return Sistema.CAMPO_MASCARA.containsKey(campoChave) ?
-      criarCampoComMascara(Sistema.CAMPO_MASCARA.get(campoChave)) :
-      new JTextField(30);
+    return Sistema.CAMPO_MASCARA.containsKey(campoChave) ? criarCampoComMascara(Sistema.CAMPO_MASCARA.get(campoChave))
+        : new JTextField(30);
   }
 
   private JFormattedTextField criarCampoComMascara(String mascara) {
@@ -109,10 +109,9 @@ public class Cadastro extends Padrao {
   private void adicionarBotoes(JPanel painel, GridBagConstraints grade, AtomicInteger ordem) {
     var painelBotoes = new JPanel(new GridLayout(1, 0, 5, 0));
     Stream.of(
-      criarBotao("Salvar", () -> salvarFormulario()),
-      criarBotao("Limpar", () -> limparFormulario()),
-      criarBotao("Cancelar", () -> dispose())
-    ).forEach(painelBotoes::add);
+        criarBotao("Salvar", () -> salvarFormulario()),
+        criarBotao("Limpar", () -> limparFormulario()),
+        criarBotao("Cancelar", () -> dispose())).forEach(painelBotoes::add);
     grade.gridx = 0;
     grade.gridy = ordem.get();
     grade.gridwidth = 2;
@@ -126,7 +125,7 @@ public class Cadastro extends Padrao {
   }
 
   private JPanel adicionarPainelLista() {
-    dadosTabela =  new DefaultTableModel(cadastro.getCampos().keySet().toArray(), 0);
+    dadosTabela = new DefaultTableModel(cadastro.getCampos().keySet().toArray(), 0);
     listarCadastro();
     var painel = new JPanel(new BorderLayout());
     var tabela = new JTable(dadosTabela);
@@ -197,13 +196,14 @@ public class Cadastro extends Padrao {
         if (camposFormulario.get(campo.getKey()) instanceof JFormattedTextField campoFormulario) {
           campo.setValue(campoFormulario.getText().toString().replaceAll("[^\\d/]", ""));
         } else if (camposFormulario.get(campo.getKey()) instanceof JTextField campoFormulario) {
-            campo.setValue(campoFormulario.getText().toUpperCase());
+          campo.setValue(campoFormulario.getText().toUpperCase());
         } else if (camposFormulario.get(campo.getKey()) instanceof JComboBox campoFormulario) {
           if (camposComboBox.get(campo.getKey()).isEnum()) {
             campo.setValue(campoFormulario.getSelectedItem().toString());
           } else {
-            cadastro.setIndice(campoFormulario.getSelectedIndex());
-            campo.setValue(cadastro.procurarIndice().getValores()[0]);
+            if (campo.getKey().equals(Sistema.CAMPO_CURSO)) {
+              recuperarValorCadastro(campo, campoFormulario, new CadastroCurso());
+            }
           }
         }
       });
@@ -212,6 +212,12 @@ public class Cadastro extends Padrao {
     } catch (Exception e) {
       exibirMensagem(STR."Erro no cadastro. Entrada incorreta. \{e.getMessage()}", 0);
     }
+  }
+
+  private void recuperarValorCadastro(Entry<String, String> campo, JComboBox<?> campoFormulario,
+      NovoCadastro<? extends TipoCadastro> cadastro) {
+    cadastro.setIndice(campoFormulario.getSelectedIndex());
+    campo.setValue(cadastro.procurarIndice().getValores()[0]);
   }
 
   private void listarCadastro() {
@@ -235,7 +241,7 @@ public class Cadastro extends Padrao {
   private void excluirFormulario() {
     try {
       var excluir = JOptionPane.showConfirmDialog(Cadastro.this, "Deseja excluir o cadastro?",
-        Sistema.TITULO, JOptionPane.YES_NO_OPTION);
+          Sistema.TITULO, JOptionPane.YES_NO_OPTION);
       if (excluir == JOptionPane.YES_OPTION) {
         cadastro.setOperacao(Operacao.EXCLUIR);
         salvarCadastro();
@@ -260,7 +266,7 @@ public class Cadastro extends Padrao {
     var screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int x = (screenSize.width - preferredSize.width) / 2;
     int y = (screenSize.height - preferredSize.height) / 2;
-    //TODO: POPUP AS VEZES NÃO CENTRALIZADO NA TELA
+    // TODO: POPUP AS VEZES NÃO CENTRALIZADO NA TELA
     popup.setLocation(x, y);
     popup.setModal(true);
     popup.setVisible(true);
